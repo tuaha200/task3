@@ -7,7 +7,7 @@ def configure_router():
         'host': '192.168.56.101',  # Replace with your router's IP address
         'username': 'tuaha',     # Username
         'password': 'cisco123',  # Password
-        'secret': 'cisco1234',   # Enable password
+        
     }
 
     # Configuration commands for the router
