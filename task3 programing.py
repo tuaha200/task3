@@ -3,7 +3,7 @@ from netmiko import ConnectHandler
 # Device configuration details
 router = {
     'device_type': 'cisco_ios',
-    'host': '192.168.56.0',  # Updated router IP address
+    'host': '192.168.56.101',  # Updated router IP address
     'username': 'tuaha',     # Username
     'password': 'cisco123',  # Password
     'secret': 'cisco1234',   # Enable Secret
@@ -16,7 +16,7 @@ config_commands = [
     "ip address 10.0.0.1 255.255.255.0",
     "no shutdown",
     "interface gigabitEthernet 0/0",
-    "ip address 192.168.56.1 255.255.255.0",
+    "ip address 192.168.56.101 255.255.255.0",
     "no shutdown",
     
     # OSPF Configuration
