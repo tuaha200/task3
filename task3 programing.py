@@ -1,59 +1,56 @@
 from netmiko import ConnectHandler
 
-# Device configuration details
-router = {
-    'device_type': 'cisco_ios',
-    'host': '192.168.56.101',  # Updated router IP address
-    'username': 'tuaha',     # Username
-    'password': 'cisco123',  # Password
-    'secret': 'cisco1234',   # Enable Secret
-}
+def configure_router():
+    # Router connection details
+    router = {
+        'device_type': 'cisco_ios',
+        'host': '192.168.56.101',  # Replace with your router's IP address
+        'username': 'tuaha',     # Username
+        'password': 'cisco123',  # Password
+        'secret': 'cisco1234',   # Enable password
+    }
 
-# Configuration script
-config_commands = [
-    # Loopback and Interface Configuration
-    "interface loopback 0",
-    "ip address 10.0.0.1 255.255.255.0",
-    "no shutdown",
-    "interface gigabitEthernet 0/0",
-    "ip address 192.168.56.101 255.255.255.0",
-    "no shutdown",
-    
-    # OSPF Configuration
-    "router ospf 1",
-    "network 10.0.0.0 0.0.0.255 area 0",
-    "network 192.168.56.0 0.0.0.255 area 0",
-    
-    # Access Control List (ACL) Configuration
-    "ip access-list extended BLOCK_HTTP",
-    "deny tcp any any eq 80",  # Block HTTP traffic
-    "permit ip any any",       # Allow all other traffic
-    
-    # IPSec Configuration
-    "crypto isakmp policy 10",
-    "encryption aes",
-    "hash sha",
-    "authentication pre-share",
-    "group 14",
-    "crypto isakmp key MYSECRETKEY address 0.0.0.0",
-    "crypto ipsec transform-set MY_TRANSFORM_SET esp-aes esp-sha-hmac",
-    "crypto map MY_CRYPTO_MAP 10 ipsec-isakmp",
-    "set peer 192.168.56.2",  # Peer IP (update as needed)
-    "set transform-set MY_TRANSFORM_SET",
-    "match address 101",     # Link crypto map to ACL
-    "interface gigabitEthernet 0/1",
-    "crypto map MY_CRYPTO_MAP",
-]
+    # Configuration commands for the router
+    config_commands = [
+        # Configure Loopback Interface
+        "interface loopback 0",
+        "ip address 10.0.0.1 255.255.255.0",
+        "no shutdown",
 
-def configure_device(device, commands):
+        # Configure Physical Interface
+        "interface gigabitEthernet 0/0",
+        "ip address 192.168.56.101 255.255.255.0",
+        "no shutdown",
+
+        # Configure OSPF
+        "router ospf 1",
+        "network 10.0.0.0 0.0.0.255 area 0",  # Advertise the loopback network
+        "network 192.168.56.0 0.0.0.255 area 0",  # Advertise the physical network
+    ]
+
     try:
-        connection = ConnectHandler(**device)
-        connection.enable()
-        output = connection.send_config_set(commands)
+        # Establish an SSH connection to the router
+        print("Connecting to the router...")
+        connection = ConnectHandler(**router)
+        connection.enable()  # Enter enable mode
+
+        # Send configuration commands
+        print("Sending configuration commands...")
+        output = connection.send_config_set(config_commands)
         print(output)
+
+        # Save the configuration
+        print("Saving the configuration...")
+        save_output = connection.send_command("write memory")
+        print(save_output)
+
+        # Close the connection
         connection.disconnect()
+        print("Configuration complete and connection closed.")
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
-# Execute the script
-configure_device(router, config_commands)
+# Run the configuration function
+if __name__ == "__main__":
+    configure_router()
