@@ -18,7 +18,7 @@ def configure_router():
         "no shutdown",
 
         # Configure Physical Interface
-        "interface gigabitEthernet 0/0",
+        "interface loopback 1",
         "ip address 192.168.56.101 255.255.255.0",
         "no shutdown",
 
