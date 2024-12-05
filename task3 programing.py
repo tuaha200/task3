@@ -1,3 +1,23 @@
+from netmiko import ConnectHandler
+
+def configure_router():
+    # Router connection details
+    router = {
+        'device_type': 'cisco_ios',
+        'host': '192.168.56.101',  # Replace with your router's IP address
+        'username': 'prne',     # Username
+        'password': 'cisco123',  # Password
+        
+    }
+
+    # Configuration commands for the router
+    config_commands = [
+        # Configure Loopback Interface
+        "interface loopback 0",
+        "ip address 10.0.0.1 255.255.255.0",
+        "no shutdown",
+
+        # Configure Physical Interface
         "interface loopback 1",
         "ip address 192.168.56.101 255.255.255.0",
         "no shutdown",
