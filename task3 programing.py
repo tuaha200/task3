@@ -4,7 +4,7 @@ def configure_router():
     # Router connection details
     router = {
         'device_type': 'cisco_ios',
-        'host': '192.168.56.101',  # Replace with your router's IP address
+        'host': '192.168.56.101',  
         'username': 'cisco',     # Username
         'password': 'cisco123',  # Password
         
